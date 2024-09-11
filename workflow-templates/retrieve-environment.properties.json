@@ -1,5 +1,5 @@
 {
-    "name": "Step 1 of the Repowered analysis: retrieve environment",
+    "name": "Repowered Analysis - step 1: retrieve environment",
     "description": "Based on the branch name the analysis is run for, the environment changes. The environments are configured in the GitHub's repository settings",
     "iconName": "octicon git-branch",
     "categories": "Repowered Analysis"

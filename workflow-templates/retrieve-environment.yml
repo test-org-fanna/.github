@@ -14,7 +14,7 @@ on:
       - main
 
 jobs:
-  get-environment:
+  retrieve-environment:
     runs-on: ubuntu-latest
     steps:
       - name: Extract branch name
