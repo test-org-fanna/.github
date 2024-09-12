@@ -12,7 +12,7 @@ on:
       - main
 
 jobs:
-  generate tag:
+  generate_tag:
     runs-on: ubuntu-latest
     steps:
       - name: Extract branch name
