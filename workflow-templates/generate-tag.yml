@@ -12,13 +12,14 @@ on:
       - main
 
 jobs:
-  retrieve-environment:
+  generate tag:
     runs-on: ubuntu-latest
     steps:
       - name: Extract branch name
         run: |
           branch=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}
           echo "BRANCH=$branch" >> $GITHUB_ENV
+
       - name: Get environment from branch
         run: |
           if [ $BRANCH = "main" ]; then
@@ -29,6 +30,7 @@ jobs:
             environment=qa
           fi
           echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
+
       - name: Generate tags  # latest tag will be overwritten, sha tag is the reference to keep
         env:
           HUB: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -36,7 +38,4 @@ jobs:
           repo_name=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER}
           latest_tag=$HUB$repo_name:latest-$ENVIRONMENT 
           sha_tag=$HUB$repo_name:$GITHUB_SHA
-          echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV && echo "SHA_TAG=$sha_tag" >> $GITHUB_ENV
-      - name: test it
-        run: echo $LATEST_TAG $SHA_TAG
-
+          echo "TAGS=$latest_tag,$sha_tag" >> $GITHUB_ENV

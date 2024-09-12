@@ -1,6 +1,4 @@
 # Repowered analysis step 2 (ref: README.MD)
-#  Builds the image(s) from the Dockerfile(s) with the environment tag and pushes them to the Repowered dockerhub
-#  The environments are configured within GitHub
 name: Step 2 - Docker build and push
 
 on:
@@ -14,22 +12,30 @@ on:
       - main
 
 jobs:
-  retrieve-environment:
+  docker-build-and-push:
     runs-on: ubuntu-latest
+    matrix:
+        # Add your Dockerfile name(s) in the list below
+        # Standard use is just 'Dockerfile'
+        dockerfile: [Dockerfile]
     steps:
-      - name: Extract branch name
-        run: |
-          branch=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}
-          echo "BRANCH=$branch" >> $GITHUB_ENV
-      - name: Get environment from branch
-        id: set_environment
-        run: |
-          if [ $BRANCH = "main" ]; then
-            environment=prod
-          elif [[ $BRANCH = "dev" ]]; then
-            environment=dev
-          else
-            environment=qa
-          fi
-          echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
-      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.dockerfile }} and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }q
+          push: true
+          tags: ${{ env.TAGS }}
+          secrets: |
+            PRIVATE_PYPI_URL=${{ secrets.PRIVATE_PYPI_URL }}
+            PRIVATE_PYPI_USER=${{ secrets.PRIVATE_PYPI_USER}}
+            PRIVATE_PYPI_PASSWORD=${{ secrets.PRIVATE_PYPI_PASSWORD }}
