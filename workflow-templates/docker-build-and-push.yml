@@ -1,7 +1,7 @@
-# Repowered analysis step 1 (ref: README.MD)
-#  Based on the branch name the analysis is run for, the environment changes
+# Repowered analysis step 2 (ref: README.MD)
+#  Builds the image(s) from the Dockerfile(s) with the environment tag and pushes them to the Repowered dockerhub
 #  The environments are configured within GitHub
-name: Step 1 - Retrieve Environment
+name: Step 2 - Docker build and push
 
 on:
   workflow_dispatch:
