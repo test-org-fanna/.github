@@ -42,5 +42,6 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           push: true
+          tags: test-1
 #          tags: ${{ env.TAGS }}
           secrets: ${{ matrix.secrets }}
