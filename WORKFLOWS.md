@@ -1,12 +1,26 @@
-# .github
-The special repo
+# Workflows
+explanation
 
 ### Tips to keep the maintainer happy
-- Do noy create your own custom workflow but request/create an organizational one
+- Do noy create your own custom workflows but request/create one on organizational level
 - Keep the tags clean; if a Docker build did not succeed, remove the tag manually
-- 
 
-## Workflow 1: docker-build-and-push
+# The mother of all workflows
+Caller workflows
+
+# Workflows in steps
+
+## Workflow : Unit Test
+### A] Django
+### B] Vitest
+
+- [ ] Robot framework for integration tests
+
+## Workflow : Integration Test
+### A] Cypress
+- [ ] Robot for integration tests?
+
+## Workflow : docker-build-and-push
 #### Use them
 1. Input Dockerfile name(s)
 2. Input Dockerfile secret(s):
@@ -28,6 +42,6 @@ The special repo
 
 
 
-## Workflow 2: deployment
+## Workflow : deployment
 ### A] Kubernetes deployment
 ### B] SSH deployment
