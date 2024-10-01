@@ -1,6 +1,0 @@
-{
-    "name": "Repowered Analysis - step 1: generate tag",
-    "description": "Based on the branch, the environment is determined and the GitHub's environment settings are retrieved. From that information, the tag is generated",
-    "iconName": "octicon tag",
-    "categories": ["Repowered Analysis"]
-}
