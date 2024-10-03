@@ -22,7 +22,6 @@ on:
 jobs:
   generate-image-tag:
     runs-on: ubuntu-latest
-    id: generate-image-tag
     outputs:
       image_tag: ${{ steps.docker-image-tag.outputs.IMAGE_TAG }}
     steps:
