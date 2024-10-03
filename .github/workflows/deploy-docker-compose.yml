@@ -21,7 +21,7 @@ on:
       docker-compose_local_file_path:
         type: string
         required: false
-        default: "{{defaultContext}}:./docker-compose.yml"
+        default: ./docker-compose.yml
     secrets:
       key:
         required: true
