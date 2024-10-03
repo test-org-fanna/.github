@@ -10,7 +10,7 @@ on:
       docker_hub_username:
         type: string
         required: true
-      docker-compose_server_file_path:
+      docker-compose_remote_file_path:
         type: string
         required: true
       # Optional
@@ -40,8 +40,8 @@ jobs:
           host: ${{ inputs.host }}
           username: ${{ inputs.server_username }}
           key: ${{ secrets.key }}
-          source: ${{ inputs.docker-compose_server_file_path }}
-          target: ${{ inputs.docker-compose_server_file_path }}
+          source: ${{ inputs.docker-compose_local_file_path }}
+          target: ${{ inputs.docker-compose_remote_file_path }}
 
   deploy-docker-compose:
     name: Deploy docker-compose via SSH
@@ -57,5 +57,5 @@ jobs:
           script: |
             docker system prune --all --force
             docker login --username ${{ inputs.docker_hub_username }} --pasword-stdin ${{ secrets.docker_hub_access_token }}
-            docker-compose -f ${{ inputs.docker-compose_server_file_path }} pull 
-            docker-compose -f ${{ inputs.docker-compose_server_file_path }} up -d --force-recreate
+            docker-compose -f ${{ inputs.docker-compose_remote_file_path }} pull 
+            docker-compose -f ${{ inputs.docker-compose_remote_file_path }} up -d --force-recreate
