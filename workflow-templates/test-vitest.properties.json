@@ -1,8 +1,8 @@
 {
-    "name": "Repowered Analysis #Xb - Unit Test (Vitest)",
+    "name": "Repowered #Xb - Unit Test (Vitest)",
     "description": "la",
     "iconName": "octicon beaker",
-    "categories": ["Repowered Analysis"],
+    "categories": ["Repowered"],
     "filePatterns": [
         "^yarn spullen.*"
     ]

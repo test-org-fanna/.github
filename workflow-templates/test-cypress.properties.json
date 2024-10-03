@@ -1,8 +1,8 @@
 {
-    "name": "Repowered Analysis #Xa - Integration Test (Cypress)",
+    "name": "Repowered #Xa - Integration Test (Cypress)",
     "description": "la",
     "iconName": "octicon beaker",
-    "categories": ["Repowered Analysis"],
+    "categories": ["Repowered"],
     "filePatterns": [
         "e2e spullen.*"
     ]

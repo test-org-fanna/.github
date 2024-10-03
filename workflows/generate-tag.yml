@@ -1,0 +1,30 @@
+name: Generate and Publish Tag
+
+on:
+  workflow_call:
+    secrets:
+      github_token:
+        required: true
+
+jobs:
+  generate-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # Checkout the repository with all commit history
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+
+      # Automatically bump and tag with the latest SemVer formatted version.
+      - name: Generate and push GitHub tag
+        id: github-tag
+
+        uses: anothrNick/github-tag-action@1
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          WITH_V: true
+          PRERELEASE: true
+          DRY_RUN: true

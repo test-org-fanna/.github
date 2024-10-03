@@ -5,7 +5,7 @@ explanation
 - Do noy create your own custom workflows but request/create one on organizational level
 - Keep the tags clean; if a Docker build did not succeed, remove the tag manually
 
-# The mother of all workflows
+# The mother of all workflows: The Repowered CI
 Caller workflows
 
 # Workflows in steps
@@ -23,6 +23,7 @@ Caller workflows
 ## Workflow : docker-build-and-push
 #### Use them
 1. Input Dockerfile name(s)
+   - standard is Dockerfile, only add if there are multiple dockerfiles in the repo
 2. Input Dockerfile secret(s):
    1. retrieve secrets from GitHub and set them as a matrix variable [image here]()
    2. write the secrets as a multiline environment variable [here](https://docs.docker.com/build/ci/github-actions/secrets/#secret-mounts)

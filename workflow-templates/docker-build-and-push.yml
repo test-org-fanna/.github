@@ -1,6 +1,6 @@
 # ORGANIZATIONAL TEMPLATE: do not alter except for requested input
 
-# Repowered analysis step 1 (ref: WORKFLOWS.MD)
+# Repowered step 1 (ref: WORKFLOWS.MD)
 name: Step 1 - Docker; tag, build and push
 
 on:
