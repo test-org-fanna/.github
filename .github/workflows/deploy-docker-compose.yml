@@ -7,10 +7,11 @@ on:
       host:
         type: string
         required: true
-      docker-compose_remote_file_path:
-        type: string
-        required: true
       # Optional
+      docker-compose_remote_dir:
+        type: string
+        required: false
+        default: ./
       server_username:
         type: string
         required: false
@@ -18,7 +19,7 @@ on:
       docker-compose_local_file_path:
         type: string
         required: false
-        default: ./docker-compose.yml
+        default: docker-compose.yml
     secrets:
       key:
         required: true
@@ -36,7 +37,7 @@ jobs:
           username: ${{ inputs.server_username }}
           key: ${{ secrets.key }}
           source: ${{ inputs.docker-compose_local_file_path }}
-          target: ${{ inputs.docker-compose_remote_file_path }}
+          target: ${{ inputs.docker-compose_remote_dir }}
 
   deploy-docker-compose:
     name: Deploy docker-compose via SSH
@@ -51,5 +52,6 @@ jobs:
           key: ${{ secrets.key }}
           script: |
             docker system prune --all --force
-            docker-compose -f ${{ inputs.docker-compose_remote_file_path }} pull 
-            docker-compose -f ${{ inputs.docker-compose_remote_file_path }} up -d --force-recreate
+            DOCKER_COMPOSE_PATH= ${{ inputs.docker-compose_remote_dir }}/$(basename ${{ inputs.docker-compose_local_file_path }})
+            docker-compose -f $DOCKER_COMPOSE_PATH pull 
+            docker-compose -f $DOCKER_COMPOSE_PATH up -d --force-recreate
