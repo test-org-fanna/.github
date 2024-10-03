@@ -11,7 +11,7 @@ on:
       docker-compose_remote_dir:
         type: string
         required: false
-        default: ./
+        default: .
       server_username:
         type: string
         required: false
