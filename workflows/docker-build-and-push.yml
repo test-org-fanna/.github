@@ -17,6 +17,7 @@ on:
         required: true
       docker_secret_1:
       docker_secret_2: #TODO: multiple secrets: hier een oplossing voor bedenken
+      docker_secret_3:
 
 jobs:
   build-and-push:
@@ -49,7 +50,8 @@ jobs:
         env:
           SECRETS: "|
               FIRST_SECRET=${{ secrets.docker_secret_1 }}
-              SECOND_SECRET=${{ secrets.docker_secret_2 }}" #TODO: hier een oplossing voor bedenken
+              SECOND_SECRET=${{ secrets.docker_secret_2 }}
+              THIRD_SECRET=${{ secrets.docker_secret_3 }}" #TODO: hier een oplossing voor bedenken
         with:
           context: "{{defaultContext}}:./"
           file: ${{ inputs.dockerfile_name }}

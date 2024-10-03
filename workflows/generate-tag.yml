@@ -1,10 +1,7 @@
 name: Generate and Publish Tag
 
 on:
-  workflow_call:
-    secrets:
-      github_token:
-        required: true
+  workflow_call: #TODO: output of tag?
 
 jobs:
   generate-tag:
@@ -24,7 +21,7 @@ jobs:
 
         uses: anothrNick/github-tag-action@1
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           PRERELEASE: true
           DRY_RUN: true
