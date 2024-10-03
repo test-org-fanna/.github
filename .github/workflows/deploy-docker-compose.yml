@@ -52,6 +52,6 @@ jobs:
           key: ${{ secrets.key }}
           script: |
             docker system prune --all --force
-            DOCKER_COMPOSE_PATH= ${{ inputs.docker-compose_remote_dir }}/$(basename ${{ inputs.docker-compose_local_file_path }})
+            DOCKER_COMPOSE_PATH=${{ inputs.docker-compose_remote_dir }}/$(basename ${{ inputs.docker-compose_local_file_path }})
             docker-compose -f $DOCKER_COMPOSE_PATH pull 
             docker-compose -f $DOCKER_COMPOSE_PATH up -d --force-recreate
