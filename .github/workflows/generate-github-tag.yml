@@ -1,4 +1,4 @@
-name: Generate and Publish Tag
+name: Generate and Publish GitHub Tag
 
 on:
   workflow_call: #TODO: output of tag?
