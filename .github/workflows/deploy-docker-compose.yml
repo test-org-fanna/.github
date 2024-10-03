@@ -7,9 +7,6 @@ on:
       host:
         type: string
         required: true
-      docker_hub_username:
-        type: string
-        required: true
       docker-compose_remote_file_path:
         type: string
         required: true
@@ -24,8 +21,6 @@ on:
         default: ./docker-compose.yml
     secrets:
       key:
-        required: true
-      docker_hub_access_token:
         required: true
 
 jobs:
@@ -56,6 +51,5 @@ jobs:
           key: ${{ secrets.key }}
           script: |
             docker system prune --all --force
-            docker login --username ${{ inputs.docker_hub_username }} --password-stdin ${{ secrets.docker_hub_access_token }}
             docker-compose -f ${{ inputs.docker-compose_remote_file_path }} pull 
             docker-compose -f ${{ inputs.docker-compose_remote_file_path }} up -d --force-recreate
