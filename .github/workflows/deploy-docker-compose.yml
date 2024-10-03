@@ -16,7 +16,7 @@ on:
         type: string
         required: false
         default: root
-      docker-compose_local_file_path:
+      docker-compose_file_path:
         type: string
         required: false
         default: docker-compose.yml
@@ -36,7 +36,7 @@ jobs:
           host: ${{ inputs.host }}
           username: ${{ inputs.server_username }}
           key: ${{ secrets.key }}
-          source: ${{ inputs.docker-compose_local_file_path }}
+          source: ${{ inputs.docker-compose_file_path }}
           target: ${{ inputs.docker-compose_remote_dir }}
 
   deploy-docker-compose:
@@ -52,6 +52,6 @@ jobs:
           key: ${{ secrets.key }}
           script: |
             docker system prune --all --force
-            DOCKER_COMPOSE_PATH=${{ inputs.docker-compose_remote_dir }}/$(basename ${{ inputs.docker-compose_local_file_path }})
+            DOCKER_COMPOSE_PATH=${{ inputs.docker-compose_remote_dir }}/${{ inputs.docker-compose_file_path }}
             docker-compose -f $DOCKER_COMPOSE_PATH pull 
             docker-compose -f $DOCKER_COMPOSE_PATH up -d --force-recreate
