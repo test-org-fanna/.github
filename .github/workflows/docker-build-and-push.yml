@@ -9,7 +9,8 @@ on:
         required: true
       dockerfile_name:
         type: string
-        required: true
+        required: false
+        default: Dockerfile
       docker_hub_username:
         required: true
         type: string
