@@ -1,0 +1,61 @@
+name: Docker build and push
+
+on:
+  workflow_call:
+    inputs:
+      # Required
+      host:
+        type: string
+        required: true
+      docker_hub_username:
+        type: string
+        required: true
+      docker-compose_server_file_path:
+        type: string
+        required: true
+      # Optional
+      server_username:
+        type: string
+        required: false
+        default: root
+      docker-compose_local_file_path:
+        type: string
+        required: false
+        default: "{{defaultContext}}:./docker-compose.yml"
+    secrets:
+      key:
+        required: true
+      docker_hub_access_token:
+        required: true
+
+jobs:
+  scp-docker-compose:
+    name: Secure copy docker-compose to server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy docker-compose file via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ inputs.host }}
+          username: ${{ inputs.server_username }}
+          key: ${{ secrets.key }}
+          source: ${{ inputs.docker-compose_server_file_path }}
+          target: ${{ inputs.docker-compose_server_file_path }}
+
+  deploy-docker-compose:
+    name: Deploy docker-compose via SSH
+    needs: scp-docker-compose
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH deployment with docker-compose
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ inputs.host }}
+          username: ${{ inputs.server_username }}
+          key: ${{ secrets.key }}
+          script: |
+            docker system prune --all --force
+            docker login --username ${{ inputs.docker_hub_username }} --pasword-stdin ${{ secrets.docker_hub_access_token }}
+            docker-compose -f ${{ inputs.docker-compose_server_file_path }} pull 
+            docker-compose -f ${{ inputs.docker-compose_server_file_path }} up -d --force-recreate
