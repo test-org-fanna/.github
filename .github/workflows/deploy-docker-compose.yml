@@ -56,6 +56,6 @@ jobs:
           key: ${{ secrets.key }}
           script: |
             docker system prune --all --force
-            docker login --username ${{ inputs.docker_hub_username }} --pasword-stdin ${{ secrets.docker_hub_access_token }}
+            docker login --username ${{ inputs.docker_hub_username }} --password-stdin ${{ secrets.docker_hub_access_token }}
             docker-compose -f ${{ inputs.docker-compose_remote_file_path }} pull 
             docker-compose -f ${{ inputs.docker-compose_remote_file_path }} up -d --force-recreate
