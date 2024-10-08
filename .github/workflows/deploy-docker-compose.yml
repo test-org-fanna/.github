@@ -3,10 +3,6 @@ name: Docker build and push
 on:
   workflow_call:
     inputs:
-      # Required
-      host:
-        type: string
-        required: true
       # Optional
       docker-compose_remote_dir:
         type: string
@@ -20,36 +16,56 @@ on:
         type: string
         required: false
         default: docker-compose.yml
-    secrets:
-      key:
-        required: true
 
 jobs:
+  determine-check-environment:
+    name: Determine and check environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve environment
+        id: retrieve-environment
+        run: |
+          echo "Running on branch ${{ github.ref }}"
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "env_name=prod" >> $GITHUB_OUTPUT
+          else
+            echo "env_name=dev" >> $GITHUB_OUTPUT
+          fi
+      - name: Check if required variables/secrets are configured in environment
+        run: |
+          if [ ${{ vars.HOST == '' }} || ${{ secrets.SSH_PRIVATE_KEY == '' }} ]; then
+            echo "::error::Variable 'HOST' and/or secret 'SSH_PRIVATE_KEY' does not exist in environment '${{ steps.retrieve-environment.outputs.env_name }}'" 
+            exit 1
+          fi
+
   scp-docker-compose:
     name: Secure copy docker-compose to server
+    needs: determine-check-environment
+    environment: ${{ needs.determine-check-environment.outputs.env_name }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Copy docker-compose file via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ inputs.host }}
+          host: ${{ vars.HOST }}
           username: ${{ inputs.server_username }}
-          key: ${{ secrets.key }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: ${{ inputs.docker-compose_file_path }}
           target: ${{ inputs.docker-compose_remote_dir }}
 
   deploy-docker-compose:
     name: Deploy docker-compose via SSH
-    needs: scp-docker-compose
+    needs: [ scp-docker-compose, determine-check-environment ]
+    environment: ${{ needs.determine-check-environment.outputs.env_name }}
     runs-on: ubuntu-latest
     steps:
       - name: SSH deployment with docker-compose
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ inputs.host }}
+          host: ${{ vars.HOST }}
           username: ${{ inputs.server_username }}
-          key: ${{ secrets.key }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker system prune --all --force
             DOCKER_COMPOSE_PATH=${{ inputs.docker-compose_remote_dir }}/${{ inputs.docker-compose_file_path }}
