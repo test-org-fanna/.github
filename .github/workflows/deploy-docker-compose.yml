@@ -26,7 +26,6 @@ jobs:
     name: Secure copy docker-compose to server
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
-    secrets: inherit
     steps:
       - uses: actions/checkout@v4
       - name: Copy docker-compose file via SCP
