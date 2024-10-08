@@ -32,6 +32,7 @@ jobs:
             echo "env_name=dev" >> $GITHUB_OUTPUT
           fi
       - name: Check if required variables/secrets are configured in environment
+        environment: ${{ steps.retrieve-environment.outputs.env_name }}
         run: |
           if [ ${{ vars.HOST == '' }} || ${{ secrets.SSH_PRIVATE_KEY == '' }} ]; then
             echo "::error::Variable 'HOST' and/or secret 'SSH_PRIVATE_KEY' does not exist in environment '${{ steps.retrieve-environment.outputs.env_name }}'" 
@@ -71,3 +72,4 @@ jobs:
             DOCKER_COMPOSE_PATH=${{ inputs.docker-compose_remote_dir }}/${{ inputs.docker-compose_file_path }}
             docker-compose -f $DOCKER_COMPOSE_PATH pull 
             docker-compose -f $DOCKER_COMPOSE_PATH up -d --force-recreate
+
