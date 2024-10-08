@@ -1,5 +1,5 @@
 name: Determine environment
-# Since reusable workflows cannot handle environments:
+# Since reusable workflows cannot handle environments they need to be retrieved separately:
 # https://docs.github.com/en/enterprise-cloud@latest/actions/sharing-automations/reusing-workflows#limitations
 
 on:
@@ -7,20 +7,21 @@ on:
     outputs:
       environment:
         description: "The GitHub's environment"
-        value: ${{ jobs.determine-environment.outputs.environment }}
+        value: ${{ jobs.determine-environment.outputs.env_name }}
 
 jobs:
   determine-environment:
+    name: Determine the GitHub environment
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ steps.get-env.outputs.environment }}
+      env_name: ${{ steps.retrieve-environment.outputs.env_name }}
     steps:
-      - name: Determine the GitHub Action environment
-        id: get-env
+      - name: Retrieve environment
+        id: retrieve-environment
         run: |
           echo "Running on branch ${{ github.ref }}"
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "environment=prod" >> $GITHUB_OUTPUT
+            echo "env_name=prod" >> $GITHUB_OUTPUT
           else
-            echo "environment=dev" >> $GITHUB_OUTPUT
+            echo "env_name=dev" >> $GITHUB_OUTPUT
           fi
