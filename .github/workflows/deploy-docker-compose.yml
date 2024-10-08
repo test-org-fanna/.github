@@ -18,9 +18,11 @@ on:
         default: docker-compose.yml
 
 jobs:
-  determine-check-environment:
-    name: Determine and check environment
+  determine-environment:
+    name: Determine the GitHub environment
     runs-on: ubuntu-latest
+    outputs:
+      env_name: ${{ steps.retrieve-environment.outputs.env_name }}
     steps:
       - name: Retrieve environment
         id: retrieve-environment
@@ -31,18 +33,24 @@ jobs:
           else
             echo "env_name=dev" >> $GITHUB_OUTPUT
           fi
+
+  check-environment:
+    name: Check the GitHub environment needed secrets and variables
+    runs-on: ubuntu-latest
+    needs: determine-environment
+    environment: ${{ needs.determine-environment.outputs.env_name }}
+    steps:
       - name: Check if required variables/secrets are configured in environment
-        environment: ${{ steps.retrieve-environment.outputs.env_name }}
         run: |
           if [ ${{ vars.HOST == '' }} || ${{ secrets.SSH_PRIVATE_KEY == '' }} ]; then
-            echo "::error::Variable 'HOST' and/or secret 'SSH_PRIVATE_KEY' does not exist in environment '${{ steps.retrieve-environment.outputs.env_name }}'" 
+            echo "::error::Variable 'HOST' and/or secret 'SSH_PRIVATE_KEY' does not exist in environment ${{ needs.determine-environment.outputs.env_name }}" 
             exit 1
           fi
 
   scp-docker-compose:
     name: Secure copy docker-compose to server
-    needs: determine-check-environment
-    environment: ${{ needs.determine-check-environment.outputs.env_name }}
+    needs: determine-environment
+    environment: ${{ needs.determine-environment.outputs.env_name }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,8 +65,8 @@ jobs:
 
   deploy-docker-compose:
     name: Deploy docker-compose via SSH
-    needs: [ scp-docker-compose, determine-check-environment ]
-    environment: ${{ needs.determine-check-environment.outputs.env_name }}
+    needs: [ scp-docker-compose, determine-environment ]
+    environment: ${{ needs.determine-environment.outputs.env_name }}
     runs-on: ubuntu-latest
     steps:
       - name: SSH deployment with docker-compose
