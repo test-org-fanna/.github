@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       # Required
-      host:
+      environment:
         type: string
         required: true
       # Optional
@@ -20,9 +20,6 @@ on:
         type: string
         required: false
         default: docker-compose.yml
-    secrets:
-      ssh_private_key:
-        required: true
 
 jobs:
   scp-docker-compose:
@@ -34,9 +31,9 @@ jobs:
       - name: Copy docker-compose file via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ inputs.host }}
+          host: ${{ vars.HOST }}
           username: ${{ inputs.server_username }}
-          key: ${{ secrets.ssh_private_key }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: ${{ inputs.docker-compose_file_path }}
           target: ${{ inputs.docker-compose_remote_dir }}
 
@@ -49,9 +46,9 @@ jobs:
       - name: SSH deployment with docker-compose
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ inputs.host }}
+          host: ${{ vars.HOST }}
           username: ${{ inputs.server_username }}
-          key: ${{ secrets.ssh_private_key }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker system prune --all --force
             DOCKER_COMPOSE_PATH=${{ inputs.docker-compose_remote_dir }}/${{ inputs.docker-compose_file_path }}
