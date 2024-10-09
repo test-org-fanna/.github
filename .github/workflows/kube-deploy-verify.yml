@@ -11,6 +11,10 @@ on:
       docker_image_tag:
         type: string
         required: true
+      inputs:
+        environment:
+          type: string
+          required: true
 
 jobs:
   deploy-verify:
