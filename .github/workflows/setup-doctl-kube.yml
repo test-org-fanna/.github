@@ -3,9 +3,10 @@ name: Setup Digital Ocean Client for Kubernetes Cluster
 on:
   workflow_call:
     # Required
-    environment:
-      type: string
-      required: true
+    inputs:
+      environment:
+        type: string
+        required: true
 
 jobs:
   setup-digital-ocean-client:
