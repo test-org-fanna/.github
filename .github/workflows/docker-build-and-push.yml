@@ -69,6 +69,6 @@ jobs:
         with:
           context: "{{defaultContext}}:./"
           file: ${{ inputs.dockerfile_name }}
-          push: true
+          push: false
           tags: ${{ needs.generate-image-tag.outputs.image_tag }}
           secrets: ${{ env.SECRETS }}
