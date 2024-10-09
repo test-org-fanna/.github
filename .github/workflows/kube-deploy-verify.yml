@@ -15,9 +15,9 @@ on:
         required: true
 
 jobs:
-  runs-on: ubuntu-latest
-  environment: ${{ inputs.environment }}
   install-doctl:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -54,7 +54,7 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save  --expiry-seconds ${{ env.expiry-seconds }} ${{ vars.CLUSTER_NAME }}
 
       - name: Update kubernetes secrets
-#        continue-on-error: true
+        #        continue-on-error: true
         run: |
           kubectl delete secret infisical-secrets --ignore-not-found=true
           kubectl create secret generic infisical-secrets \
