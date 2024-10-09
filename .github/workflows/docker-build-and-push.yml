@@ -15,7 +15,7 @@ on:
         required: true
         type: string
     outputs:
-      environment:
+      image_tag:
         description: "The docker image tag following the structure: <docker hub username>/<repository>[-<name>]:<semver version>"
         value: ${{ jobs.generate-image-tag.outputs.image_tag }}
     secrets:
