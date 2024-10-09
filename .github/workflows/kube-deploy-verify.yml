@@ -10,11 +10,9 @@ on:
         description: A JSON string list of all deployments belonging to the same (docker) image
       docker_image_tag:
         type: string
+      environment:
+        type: string
         required: true
-      inputs:
-        environment:
-          type: string
-          required: true
 
 jobs:
   deploy-verify:
