@@ -54,6 +54,7 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save  --expiry-seconds ${{ env.expiry-seconds }} ${{ vars.CLUSTER_NAME }}
 
       - name: Update kubernetes secrets
+        continue-on-error: true
         run: |
           kubectl delete secret infisical-secrets --ignore-not-found=true
           kubectl create secret generic infisical-secrets \
