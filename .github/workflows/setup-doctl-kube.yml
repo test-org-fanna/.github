@@ -21,10 +21,10 @@ jobs:
         env:
           expiry-seconds: ${{ vars.KUBE_CRED_EXPIRY_SECOND || 600 }}
         run: doctl kubernetes cluster kubeconfig save  --expiry-seconds ${{ env.expiry-seconds }} ${{ vars.CLUSTER_NAME }}
-#      - name: Update kubernetes secrets
-#        run: |
-#          kubectl delete secret infisical-secrets --ignore-not-found=true
-#          kubectl create secret generic infisical-secrets \
-#          --from-literal=INFISICAL_CLIENT_ID=${{ secrets.INFISICAL_CLIENT_ID }} \
-#          --from-literal=INFISICAL_CLIENT_SECRET=${{ secrets.INFISICAL_CLIENT_SECRET }} \
-#          --from-literal=INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID }}
+      - name: Update kubernetes secrets
+        run: |
+          kubectl delete secret infisical-secrets --ignore-not-found=true
+          kubectl create secret generic infisical-secrets \
+          --from-literal=INFISICAL_CLIENT_ID=${{ secrets.INFISICAL_CLIENT_ID }} \
+          --from-literal=INFISICAL_CLIENT_SECRET=${{ secrets.INFISICAL_CLIENT_SECRET }} \
+          --from-literal=INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID }}
