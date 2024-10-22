@@ -3,15 +3,14 @@ name: Django Tests with Migration Check and Coverage
 on:
   workflow_call:
     inputs:
-      # Required
+      # Optional
       python_versions:
         type: string
-        required: true
         description: A JSON string list of all python versions to run these tests on
-      # Optional
+        default: "['3.11.2']"
       poetry_cache_key:
         type: string
-        description: Add a random cache key to reset the cache and use a fresh installation of Poetry
+        description: Add a random cache key to reset the Poetry cache and use a fresh installation of Poetry
         default: poetry-0
 
 jobs:
@@ -43,7 +42,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Setup Python ${{ matrix.python-version }}
         id: setup-python
         uses: actions/setup-python@v5
         with:
