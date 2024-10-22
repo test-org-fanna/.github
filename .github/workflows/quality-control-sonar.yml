@@ -7,16 +7,13 @@ on:
       coverage_report_name:
         type: string
         default: coverage.xml
-      report_destination_path:
-        type: string
-        default: ./
     secrets:
       # Required
       sonar-token:
         required: true
       # Optional
       github-token:
-        description: standard availability during run-time via secrets.GITHUB_TOKEN
+        description: Standard availability during run-time via secrets.GITHUB_TOKEN
         required: false
         default: ${{ secrets.GITHUB_TOKEN }}
 
@@ -29,7 +26,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.coverage_report_name }}
-        path: ${{ inputs.report_destination_path }}
 
     - name: SonarCloud analysis
       uses: SonarSource/sonarcloud-github-action@master
