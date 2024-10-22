@@ -1,0 +1,115 @@
+name: Django Tests with Migration Check and Coverage
+
+on:
+  workflow_call:
+    inputs:
+      # Required
+      python_versions:
+        type: string
+        required: true
+        description: A JSON string list of all python versions to run these tests on
+      # Optional
+      poetry_cache_key:
+        type: string
+        description: Add a random cache key to reset the cache and use a fresh installation of Poetry
+        default: poetry-0
+
+jobs:
+  test:
+    name: Django Tests With Postgres and Coverage for python version ${{ matrix.python.version }}
+    strategy:
+      matrix:
+        python-version: ${{ fromJSON(inputs.python_versions) }}
+      runs-on: ubuntu-latest
+      container: python:${{ matrix.python-version }}-alpine
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432/tcp # assign a random free host port
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: "x64"
+
+      - name: Load cached Poetry installation
+        id: cached-poetry
+        uses: actions/cache@v4
+        with:
+          path: ~/.local
+          key: ${{ inputs.poetry_cache_key }}
+
+      - name: Install Fresh Poetry
+        if: steps.cached-poetry.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+          installation-arguments: poetry config repositories.repowered ${{ secrets.PRIVATE_PYPI_URL}} \
+            poetry config http-basic.repowered ${{ secrets.PRIVATE_PYPI_USER }} ${{ secrets.PRIVATE_PYPI_PASSWORD}}
+
+      - name: Configure Cached Poetry # Configuration options are not re-applied on cache hits
+        if: steps.cached-poetry.outputs.cache-hit == 'true'
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry config repositories.repowered ${{ secrets.PRIVATE_PYPI_URL}}
+          poetry config http-basic.repowered ${{ secrets.PRIVATE_PYPI_USER }} ${{ secrets.PRIVATE_PYPI_PASSWORD}}
+
+      - name: Load Cached Virtual Environment
+        id: cached-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install Fresh Dependencies
+        if: steps.cached-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root --no-ansi
+
+      - name: Check Django Migrations
+        run: |
+          poetry run python manage.py makemigrations --dry-run --check --no-input
+        env:
+          SQL_ENGINE: django.db.backends.postgresql
+          SQL_DATABASE: github_actions
+          SQL_USER: postgres
+          SQL_PASSWORD: postgres
+          SQL_HOST: localhost
+          SQL_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+
+      - name: Run tests with coverage
+        run: poetry run pytest --cov-config=.coveragerc --cov-report=xml --cov=. --no-testmon --durations=5
+        env:
+          CI: true
+          SQL_ENGINE: django.db.backends.postgresql
+          SQL_DATABASE: github_actions
+          SQL_USER: postgres
+          SQL_PASSWORD: postgres
+          SQL_HOST: localhost
+          SQL_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+
+      - name: Archive test coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.xml
+          path: coverage.xml
+          if-no-files-found: 'error'
