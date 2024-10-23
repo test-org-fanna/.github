@@ -2,13 +2,14 @@ name: Run Django Unit Test with Coverage, Check the Migration, Run Sonar and Lin
 
 on:
   workflow_dispatch:
-  pull_request:
+  push:
 
 jobs:
   django-unit-migration-test:
     uses: test-org-fanna/.github/.github/workflows/django-test-migrations-coverage.yml@main
     with:
       # python_versions: # Optional, defaults to "['3.11.2']"
+      # poetry_versions: # Optional, defaults to "['1.8.4']"
       # poetry_cache_key: # Optional, for fresh installations, defaults to poetry-0
 
   quality-control-sonar:

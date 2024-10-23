@@ -8,6 +8,10 @@ on:
         type: string
         description: A JSON string list of all python versions to run these tests on
         default: "['3.11.2']"
+      poetry_versions:
+        type: string
+        description: A JSON string list of all python versions to run these tests on
+        default: "['1.8.4']"
       poetry_cache_key:
         type: string
         description: Add a random cache key to reset the Poetry cache and use a fresh installation of Poetry
@@ -19,6 +23,7 @@ jobs:
     strategy:
       matrix:
         python-version: ${{ fromJSON(inputs.python_versions) }}
+        poetry-version: ${{ fromJSON(inputs.poetry_versions) }}
       runs-on: ubuntu-latest
       container: python:${{ matrix.python-version }}-alpine
 
@@ -60,6 +65,7 @@ jobs:
         if: steps.cached-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
         with:
+          version: ${{ inputs.poetry_versions }}
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
