@@ -65,7 +65,7 @@ jobs:
         if: steps.cached-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
         with:
-          version: ${{ inputs.poetry_versions }}
+          version: ${{ matrix.poetry_version }}
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
