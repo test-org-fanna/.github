@@ -22,7 +22,7 @@ on:
       docker-compose_file_path:
         type: string
         required: false
-        default: docker-compose.yml
+        default: docker-compose-postgres.yaml
 
 jobs:
   scp-docker-compose:
