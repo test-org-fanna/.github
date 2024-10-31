@@ -1,4 +1,4 @@
-name: Run Django Unit Test with Coverage, Check the Migration, Run Sonar and Linting Quality Checks
+name: Run Django Unit Test with Coverage, Check the Migration, Run Sonar and Create Coverage Comment
 
 on:
   workflow_dispatch:

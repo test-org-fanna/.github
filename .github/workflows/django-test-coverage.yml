@@ -81,6 +81,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
+            ${{ inputs.working_directory }}/.testmondata
+            ${{ inputs.working_directory }}/.coverage
+            coverage.xml
             ${{ inputs.working_directory }}/.venv
             /github/home/.local
           key: cache-poetry-${{ matrix.poetry_version }}-python-${{ matrix.python_version }}--${{ hashFiles('**/poetry.lock') }}
@@ -113,35 +116,41 @@ jobs:
           poetry config http-basic.repowered ${{ secrets.private_pypi_user }} ${{ secrets.private_pypi_password}}
           poetry install --no-interaction --no-root --no-ansi
 
-      - name: Run tests with coverage
-        working-directory: django-test #INPUT
+      - name: Run tests with coverage (${{ inputs.num_test_processes }} parallel test procs)
+        working-directory: ${{ inputs.working_directory }}
         run: |
-          poetry run pytest --cov-config=.coveragerc --cov-report=xml --cov=. --durations=5 --numprocesses=2 2>&1 | tee /dev/stderr >test_report
-          HAS_FAILURES=$(cat test_report | grep 'failed' )
-          if [ -f test_report ]; then
-              if [ "$HAS_FAILURES" == '' ]; then
-                echo "<details><summary>:white_check_mark: Tests Succeeded</summary>" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                cat test_report >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "</details>" >> $GITHUB_STEP_SUMMARY
-              else
-                echo "<details><summary>:x: Tests Failed</summary>" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                cat test_report >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "</details>" >> $GITHUB_STEP_SUMMARY
-                exit 3
-              fi
+          if [ ${{ env.IS_STANDARD_BRANCH }} == 'true' ]; then
+            TEST_MON_FLAG=--testmon-noselect;
+          else
+            TEST_MON_FLAG=--testmon;
           fi
+            echo "Running pytest with flag $TEST_MON_FLAG and ${{vars.PARALLEL_TEST_PROCS}} parallel processes"
+          poetry run pytest -v \
+            "$TEST_MON_FLAG" --durations=5 -n ${{vars.PARALLEL_TEST_PROCS}} \
+            --cov-report=term --cov-report=xml --cov=. --cov-append \
+            --md-report --md-report-flavor gfm --md-report-exclude-outcomes passed skipped xpassed --md-report-output test_report.md
         env:
           CI: true
-          COLUMNS: 120 # For the test output
+          IS_STANDARD_BRANCH: ${{ endsWith( GITHUB.REF, 'main') || endsWith( GITHUB.REF, 'dev')
+            || contains( GITHUB.REF, 'release/') || contains( GITHUB.REF, 'hotfix/') }}
           POSTGRES_DB: ${{ inputs.postgres_db }}
           POSTGRES_USER: ${{ inputs.postgres_user }}
           POSTGRES_HOST: ${{ inputs.postgres_host }}
           POSTGRES_PASSWORD: ${{ secrets.postgres_password }}
           POSTGRES_PORT: 5432
+
+      - name: Show test failures in the job summary
+        working-directory: ${{ inputs.working_directory }}
+        if: failure()
+        run: |
+          if [ -f test_report.md ]; then
+            echo "<summary>:x: Tests Failed</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat test_report.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Tests failed but report file 'test_report.md' was not generated"
+          fi      
 
       - name: Archive test coverage report
         uses: actions/upload-artifact@v4
