@@ -38,7 +38,7 @@ jobs:
     # with:
     # coverage_report_name: # Optional, defaults to 'coverage.xml'
     secrets:
-      sonar-token: ${{ secrets.SONAR_TOKEN }}
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
 
   coverage-comment:
     needs: django-unit-test
