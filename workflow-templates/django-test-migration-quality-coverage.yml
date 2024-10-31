@@ -5,8 +5,13 @@ on:
   push:
 
 jobs:
+  strategy:
+    matrix:
+      python-version: ['3.11.2']
+
   django-unit-test:
     uses: test-org-fanna/.github/.github/workflows/django-test-coverage.yml@main
+    container: python:${{ matrix.python-version }}-alpine
     with:
       postgres_db: ${{ vars.POSTGRES_DB }}
       postgres_user: ${{ vars.POSTGRES_USER }}
@@ -22,6 +27,7 @@ jobs:
 
   django-migration-test:
     uses: test-org-fanna/.github/.github/workflows/django-migration-test.yml@main
+    container: python:${{ matrix.python-version }}-alpine
     with:
       postgres_db: ${{ vars.POSTGRES_DB }}
       postgres_user: ${{ vars.POSTGRES_USER }}
