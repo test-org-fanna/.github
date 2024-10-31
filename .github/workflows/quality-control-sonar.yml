@@ -12,7 +12,7 @@ on:
       sonar_token:
         required: true
       # Optional
-      github_token:
+      github-token:
         description: Standard availability during run-time via secrets.GITHUB_TOKEN
         required: false
         default: ${{ secrets.GITHUB_TOKEN }}
@@ -31,7 +31,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.sonar_token }}
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
 
 
 
