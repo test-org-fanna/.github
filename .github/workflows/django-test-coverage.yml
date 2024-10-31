@@ -34,13 +34,10 @@ on:
       postgres_password:
         required: true
       private_pypi_url:
-        type: string
         required: true
       private_pypi_user:
-        type: string
         required: true
       private_pypi_password:
-        type: string
         required: true
 
 jobs:
