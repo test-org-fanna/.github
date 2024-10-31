@@ -43,12 +43,12 @@ on:
 jobs:
   unit-tests-with-coverage:
     name: Django Tests With Postgres and Coverage for python version ${{ matrix.python.version }}
+    runs-on: ubuntu-latest
+    container: python:${{ matrix.python-version }}-alpine
     strategy:
       matrix:
         python-version: ${{ fromJSON(inputs.python_versions) }}
         poetry-version: ${{ fromJSON(inputs.poetry_versions) }}
-      runs-on: ubuntu-latest
-      container: python:${{ matrix.python-version }}-alpine
 
     services:
       postgres:
