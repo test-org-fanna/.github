@@ -81,9 +81,9 @@ jobs:
             /github/home/.local
           key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
-#      - name: Add cache to path
-#        if: steps.cache.outputs.cache-hit == 'true'
-#        run: echo "/github/home/.local/bin" >> $GITHUB_PATH
+      - name: Add cache to path
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: echo "/github/home/.local/bin" >> $GITHUB_PATH
 
       - name: Install Poetry ${{ inputs.poetry_version }}
         if: steps.cache.outputs.cache-hit != 'true'
