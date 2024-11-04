@@ -83,7 +83,7 @@ jobs:
           key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: lsje
-        run: ls -alhR ./.venv && ls -alhR ${{ inputs.working_directory }}
+        run: ls -alhR ${{ inputs.working_directory }}
 
       - name: Add cache to path
         if: steps.cache.outputs.cache-hit == 'true'
@@ -118,6 +118,11 @@ jobs:
           poetry config repositories.repowered ${{ secrets.private_pypi_url}}
           poetry config http-basic.repowered ${{ secrets.private_pypi_user }} ${{ secrets.private_pypi_password}}
           poetry install --no-interaction --no-root --no-ansi
+
+      - name: see where it is
+        run: |
+          which poetry
+          ls -alhR $(which poetry)
 
       - name: Run tests with coverage (${{ inputs.num_test_processes }} parallel test procs)
         working-directory: ${{ inputs.working_directory }}
