@@ -146,6 +146,7 @@ jobs:
           fi      
 
       - name: Archive test coverage report
+        working-directory: ${{ inputs.working_directory }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage.xml
