@@ -13,6 +13,13 @@ on:
       postgres_host:
         type: string
         required: true
+      # Giving from caller workflow matrix
+      python_version:
+        type: string
+        required: true
+      poetry_version:
+        type: string
+        required: true
       # Optional
       working_directory:
         type: string
@@ -48,8 +55,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install needed apk packages
-        run: apk update && apk add bash && apk add zstd && apk add tar
+      - name: Setup python ${{ inputs.python_version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python_version }}
 
       - name: Load cache
         id: cache
@@ -58,7 +67,7 @@ jobs:
           path: |
             ${{ inputs.working_directory }}/.venv
             /github/home/.local
-          key: cache-poetry-${{ hashFiles('**/poetry.lock') }}
+          key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Add cache to path
         if: steps.cache.outputs.cache-hit == 'true'

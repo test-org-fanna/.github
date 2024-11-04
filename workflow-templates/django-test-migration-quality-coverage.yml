@@ -5,14 +5,22 @@ on:
   push:
 
 jobs:
+
   django-unit-test:
     uses: test-org-fanna/.github/.github/workflows/django-test-coverage.yml@main
+    strategy:
+      matrix:
+        # Make sure that the configured python versions are available here.
+        # These versions are cached on the runner; otherwise setting up python is to slow for the CI
+        # https://github.com/actions/runner-images/blob/main/images/ubuntu/toolsets/toolset-2004.json#L4
+        python_version: [ "3.11.2" ]
+        poetry_version: [ "1.8.4" ]
     with:
       postgres_db: ${{ vars.POSTGRES_DB }}
       postgres_user: ${{ vars.POSTGRES_USER }}
       postgres_host: ${{ vars.POSTGRES_HOST }}
-      # python_versions: # Optional, defaults to "['3.11.2']"
-      # poetry_versions: # Optional, defaults to "['1.8.4']"
+      python_version: ${{ matrix.python_version }}
+      poetry_version: ${{ matrix.poetry_version }}
       # working_directory: # Optional, defaults to .
     secrets:
       postgres_password: ${{ secrets.POSTGRES_PASSWORD }}
@@ -22,12 +30,16 @@ jobs:
 
   django-migration-test:
     uses: test-org-fanna/.github/.github/workflows/django-migration-test.yml@main
+    strategy:
+      matrix:
+        python_version: [ "3.11.2" ]
+        poetry_version: [ "1.8.4" ]
     with:
       postgres_db: ${{ vars.POSTGRES_DB }}
       postgres_user: ${{ vars.POSTGRES_USER }}
       postgres_host: ${{ vars.POSTGRES_HOST }}
-      # python_versions: # Optional, defaults to "['3.11.2']"
-      # poetry_versions: # Optional, defaults to "['1.8.4']"
+      python_version: ${{ matrix.python_version }}
+      poetry_version: ${{ matrix.poetry_version }}
       # working_directory: # Optional, defaults to .
     secrets:
       postgres_password: ${{ secrets.POSTGRES_PASSWORD }}
