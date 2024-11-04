@@ -17,7 +17,7 @@ on:
 
 jobs:
   quality-control-sonar:
-    name: Quality checks via SonarCloud with coverage report
+    name: SonarCloud analysis
     runs-on: ubuntu-latest
     steps:
       - name: Download coverage artifact
