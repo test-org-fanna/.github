@@ -43,8 +43,6 @@ jobs:
   unit-tests-with-coverage:
     name: Django Tests With Postgres and Coverage
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     services:
       postgres:
@@ -120,7 +118,7 @@ jobs:
           else
             TEST_MON_FLAG=--testmon;
           fi
-            echo "Running pytest with flag $TEST_MON_FLAG and ${{vars.num_test_processes}} parallel processes"
+            echo "Running pytest with flag $TEST_MON_FLAG and ${{ inputs.num_test_processes }} parallel processes"
           poetry run pytest -v \
             "$TEST_MON_FLAG" --durations=5 -n ${{vars.PARALLEL_TEST_PROCS}} \
             --cov-report=term --cov-report=xml --cov=. --cov-append \
@@ -154,7 +152,7 @@ jobs:
           COVERAGE_PATH: ${{ inputs.working_directory }}
           MINIMUM_ORANGE: 80
 
-      - name: Store Pull Request comment
+      - name: Store Coverage Information
         uses: actions/upload-artifact@v4
         if: steps.coverage-comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         with:
