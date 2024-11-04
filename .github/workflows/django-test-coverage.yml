@@ -98,7 +98,7 @@ jobs:
       - name: Check Poetry
         working-directory: ${{ inputs.working_directory }}
         run: |
-           /github/home/.local/bin/poetry --version
+          /github/home/.local/bin/poetry --version
           INSTALL_MSG=$(poetry install --dry-run 2>&1 | tail -1)
           if [[ "$INSTALL_MSG" != '' ]]; then
             echo "<h2>:no_entry_sign: Poetry install dry-run failed </h2>" >> $GITHUB_STEP_SUMMARY
