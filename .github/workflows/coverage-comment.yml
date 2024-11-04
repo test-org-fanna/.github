@@ -15,8 +15,6 @@ jobs:
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Download coverage artifact
         uses: actions/download-artifact@v4

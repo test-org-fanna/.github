@@ -55,6 +55,8 @@ jobs:
 
   coverage-comment:
     needs: django-unit-test
+    permissions:
+      contents: write
     uses: test-org-fanna/.github/.github/workflows/coverage-comment.yml@main
     # with:
       # coverage_report_name: # Optional, defaults to 'coverage.xml'
