@@ -146,8 +146,6 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             cat test_report.md >> $GITHUB_STEP_SUMMARY
-          else
-            echo "::error::Tests failed but report file 'test_report.md' was not generated"
           fi      
 
       - name: Archive 'coverage.xml' report
