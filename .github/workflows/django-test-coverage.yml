@@ -74,10 +74,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ${{ inputs.working_directory }}/.testmondata
-            ${{ inputs.working_directory }}/.coverage
+            ${{ inputs.working_directory }}.testmondata
+            ${{ inputs.working_directory }}.coverage
             ${{ inputs.working_directory }}/coverage.xml
-            ${{ inputs.working_directory }}/.venv
+            ${{ inputs.working_directory }}.venv
             /github/home/.local
           key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
