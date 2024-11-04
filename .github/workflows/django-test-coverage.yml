@@ -13,6 +13,11 @@ on:
       postgres_host:
         type: string
         required: true
+      # Giving from caller workflow
+      poetry_version:
+        type: string
+        description: A JSON string list of all python versions to run these tests on
+        default: 1.8.4
       # Optional
       working_directory:
         type: string
@@ -34,7 +39,7 @@ on:
 
 jobs:
   unit-tests-with-coverage:
-    name: Django Tests with Coverage
+    name: Django Tests With Postgres and Coverage
     runs-on: ubuntu-latest
 
     services:
@@ -70,17 +75,17 @@ jobs:
             coverage.xml
             ${{ inputs.working_directory }}/.venv
             /github/home/.local
-          key: cache-${{ hashFiles('**/poetry.lock') }}
+          key: cache-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Add cache to path
         if: steps.cache.outputs.cache-hit == 'true'
         run: echo "/github/home/.local/bin" >> $GITHUB_PATH
 
-      - name: Install Poetry
+      - name: Install Poetry V${{ inputs.poetry_version }}
         if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
         with:
-          version: 1.8.4
+          version: ${{ inputs.poetry_version }}
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
@@ -108,7 +113,7 @@ jobs:
           else
             TEST_MON_FLAG=--testmon;
           fi
-            echo "Running pytest with flag $TEST_MON_FLAG and ${{ inputs.num_test_processes }} parallel processes"
+            echo "Running pytest with flag $TEST_MON_FLAG and ${{vars.PARALLEL_TEST_PROCS}} parallel processes"
           poetry run pytest -v \
             "$TEST_MON_FLAG" --durations=5 -n ${{vars.PARALLEL_TEST_PROCS}} \
             --cov-report=term --cov-report=xml --cov=. --cov-append \
