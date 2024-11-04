@@ -164,3 +164,4 @@ jobs:
           name: .coverage
           path: ${{ inputs.working_directory }}.coverage
           if-no-files-found: 'error'
+          include-hidden-files: true
