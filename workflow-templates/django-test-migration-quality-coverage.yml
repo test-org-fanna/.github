@@ -5,7 +5,7 @@ on:
   push:
 
 jobs:
-  django-unit-test:
+  django-unit-test-coverage:
     uses: test-org-fanna/.github/.github/workflows/django-test-coverage.yml@main
     strategy:
       matrix:
