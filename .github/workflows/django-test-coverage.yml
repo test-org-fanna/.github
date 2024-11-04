@@ -148,17 +148,24 @@ jobs:
             cat test_report.md >> $GITHUB_STEP_SUMMARY
           fi      
 
+      - name: Coverage comment
+        id: coverage-comment
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          COVERAGE_PATH: ${{ inputs.working_directory }}
+          MINIMUM_ORANGE: 80
+
+      - name: Store Pull Request comment
+        uses: actions/upload-artifact@v4
+        if: steps.coverage-comment.outputs.COMMENT_FILE_WRITTEN == 'true'
+        with:
+          name: python-coverage-comment-action
+          path: python-coverage-comment-action.txt
+
       - name: Archive 'coverage.xml' report
         uses: actions/upload-artifact@v4
         with:
           name: coverage.xml
           path: ${{ inputs.working_directory }}coverage.xml
           if-no-files-found: 'error'
-
-      - name: Archive '.coverage' report
-        uses: actions/upload-artifact@v4
-        with:
-          name: .coverage
-          path: ${{ inputs.working_directory }}.coverage
-          if-no-files-found: 'error'
-          include-hidden-files: true
