@@ -20,7 +20,7 @@ jobs:
       postgres_host: ${{ vars.POSTGRES_HOST }}
       python_version: ${{ matrix.python_version }}
       poetry_version: ${{ matrix.poetry_version }}
-      # working_directory: # Optional, defaults to ./
+      # working_directory: # Optional, defaults to './'. The last slash needs to be included
       # num_test_processes: # Optional, defaults to 2
     secrets:
       postgres_password: ${{ secrets.POSTGRES_PASSWORD }}
@@ -43,7 +43,7 @@ jobs:
       postgres_host: ${{ vars.POSTGRES_HOST }}
       python_version: ${{ matrix.python_version }}
       poetry_version: ${{ matrix.poetry_version }}
-      # working_directory: # Optional, defaults to ./
+      # working_directory: # Optional, defaults to './'. The last slash needs to be included
     secrets:
       postgres_password: ${{ secrets.POSTGRES_PASSWORD }}
       private_pypi_url: ${{ secrets.PRIVATE_PYPI_URL }}
@@ -55,7 +55,7 @@ jobs:
     uses: test-org-fanna/.github/.github/workflows/quality-control-sonar.yml@main
       # with:
       # coverage_report_name: # Optional, defaults to 'coverage.xml'
-    # working_directory: # Optional, defaults to ./
+    # working_directory: # Optional, defaults to './'. The last slash needs to be included
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
 
@@ -66,4 +66,4 @@ jobs:
     uses: test-org-fanna/.github/.github/workflows/coverage-comment.yml@main
       # with:
       # coverage_report_name: # Optional, defaults to 'coverage.xml'
-    # working_directory: # Optional, defaults to ./
+    # working_directory: # Optional, defaults to './'. The last slash needs to be included
