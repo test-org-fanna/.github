@@ -142,12 +142,19 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             cat test_report.md >> $GITHUB_STEP_SUMMARY
           else
-            echo "Tests failed but report file 'test_report.md' was not generated"
+            echo "::error::Tests failed but report file 'test_report.md' was not generated"
           fi      
 
-      - name: Archive test coverage report
+      - name: Archive 'coverage.xml' report
         uses: actions/upload-artifact@v4
         with:
           name: coverage.xml
+          path: ${{ inputs.working_directory }}
+          if-no-files-found: 'error'
+
+      - name: Archive '.coverage' report
+        uses: actions/upload-artifact@v4
+        with:
+          name: .coverage
           path: ${{ inputs.working_directory }}
           if-no-files-found: 'error'
