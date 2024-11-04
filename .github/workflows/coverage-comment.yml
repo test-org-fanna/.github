@@ -7,6 +7,9 @@ on:
       coverage_report_name:
         type: string
         default: coverage.xml
+      working_directory:
+        type: string
+        default: ./
 
 jobs:
   coverage:
@@ -17,6 +20,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.coverage_report_name }}
+          path: ${{ inputs.working_directory }}
 
       - name: Coverage comment
         id: coverage-comment

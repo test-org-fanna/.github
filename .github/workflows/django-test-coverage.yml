@@ -24,7 +24,7 @@ on:
       working_directory:
         type: string
         description: Whenever the django app (i.e. manage.py) is not in the root; the location can be specified here
-        default: .
+        default: ./
       num_test_processes:
         type: number
         description: The number of parallel test processes
@@ -76,7 +76,7 @@ jobs:
           path: |
             ${{ inputs.working_directory }}/.testmondata
             ${{ inputs.working_directory }}/.coverage
-            coverage.xml
+            ${{ inputs.working_directory }}/coverage.xml
             ${{ inputs.working_directory }}/.venv
             /github/home/.local
           key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
@@ -150,5 +150,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage.xml
-          path: coverage.xml
+          path: ${{ inputs.working_directory }}
           if-no-files-found: 'error'
