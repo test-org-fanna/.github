@@ -81,9 +81,9 @@ jobs:
             /github/home/.local
           key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Add cache to path
-        if: steps.cache.outputs.cache-hit == 'true'
-        run: echo "/github/home/.local/bin" >> $GITHUB_PATH
+#      - name: Add cache to path
+#        if: steps.cache.outputs.cache-hit == 'true'
+#        run: echo "/github/home/.local/bin" >> $GITHUB_PATH
 
       - name: Install Poetry ${{ inputs.poetry_version }}
         if: steps.cache.outputs.cache-hit != 'true'
@@ -97,6 +97,7 @@ jobs:
       - name: Check Poetry
         working-directory: ${{ inputs.working_directory }}
         run: |
+          source $(poetry env info --path)/bin/activate
           INSTALL_MSG=$(poetry install --dry-run 2>&1 | tail -1)
           if [[ "$INSTALL_MSG" != '' ]]; then
             echo "<h2>:no_entry_sign: Poetry install dry-run failed </h2>" >> $GITHUB_STEP_SUMMARY
