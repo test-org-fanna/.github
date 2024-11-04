@@ -83,7 +83,7 @@ jobs:
           key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: lsje
-        run: ls -alhR ./
+        run: ls -alhR ./.venv && ls -alhR ${{ inputs.working_directory }}
 
       - name: Add cache to path
         if: steps.cache.outputs.cache-hit == 'true'
