@@ -32,6 +32,9 @@ jobs:
     uses: test-org-fanna/.github/.github/workflows/django-migration-test.yml@main
     strategy:
       matrix:
+        # Make sure that the configured python versions are available here.
+        # These versions are cached on the runner; otherwise setting up python is to slow for the CI
+        # https://github.com/actions/runner-images/blob/main/images/ubuntu/toolsets/toolset-2004.json#L4
         python_version: [ "3.11.2" ]
         poetry_version: [ "1.8.4" ]
     with:
@@ -50,9 +53,9 @@ jobs:
   quality-control-sonar:
     needs: django-unit-test
     uses: test-org-fanna/.github/.github/workflows/quality-control-sonar.yml@main
-    # with:
+      # with:
       # coverage_report_name: # Optional, defaults to 'coverage.xml'
-      # working_directory: # Optional, defaults to ./
+    # working_directory: # Optional, defaults to ./
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
 
@@ -61,6 +64,6 @@ jobs:
     permissions:
       contents: write
     uses: test-org-fanna/.github/.github/workflows/coverage-comment.yml@main
-    # with:
+      # with:
       # coverage_report_name: # Optional, defaults to 'coverage.xml'
-      # working_directory: # Optional, defaults to ./
+    # working_directory: # Optional, defaults to ./
