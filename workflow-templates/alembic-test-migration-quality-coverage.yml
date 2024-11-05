@@ -2,7 +2,7 @@ name: Run Django Unit Test with Coverage, Check the Migration, Run Sonar and Cre
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
 
 jobs:
   django-unit-test-coverage:
