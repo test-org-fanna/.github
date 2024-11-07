@@ -1,9 +1,0 @@
-{
-    "name": "Repowered #Xa - Unit Test (Django)",
-    "description": "todo",
-    "iconName": "octicon beaker",
-    "categories": ["Repowered"],
-    "filePatterns": [
-        "^Django spullen.*"
-    ]
-}

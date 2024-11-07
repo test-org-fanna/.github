@@ -1,9 +1,0 @@
-{
-    "name": "Repowered #1 - tag, build and push",
-    "description": "Builds the image(s) from the Dockerfile(s) with the correct tag and pushes them to the Repowered dockerhub",
-    "iconName": "octicon container",
-    "categories": ["Repowered"],
-    "filePatterns": [
-        "^Dockerfile.*"
-    ]
-}
