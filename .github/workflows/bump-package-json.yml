@@ -1,0 +1,26 @@
+name: Update package.json with a given tag
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+        description: "The Semantic Versioning GitHub tag used for version control"
+
+jobs:
+  update-package-json:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Bump package.json version with tag
+        run: yarn version --no-git-tag-version --new-version ${{ inputs.tag }}
