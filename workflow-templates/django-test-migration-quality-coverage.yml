@@ -22,7 +22,7 @@ jobs:
       postgres_host: ${{ vars.POSTGRES_HOST }}
       python_version: ${{ matrix.python_version }}
       poetry_version: ${{ matrix.poetry_version }}
-      # working_directory: # Optional, defaults to './'. The last slash needs to be included
+      # working_directory: # Optional, defaults to './'
       # num_test_processes: # Optional, defaults to 2
     secrets:
       postgres_password: ${{ secrets.POSTGRES_PASSWORD }}
@@ -50,7 +50,7 @@ jobs:
       file_paths_to_cache: |
         ./.venv
         /home/runner/.local/
-      # working_directory: # Optional, defaults to './'. The last slash needs to be included
+      # working_directory: # Optional, defaults to './'
     secrets:
       postgres_password: ${{ secrets.POSTGRES_PASSWORD }}
       private_pypi_url: ${{ secrets.PRIVATE_PYPI_URL }}
@@ -61,7 +61,7 @@ jobs:
     needs: pytest-with-coverage
     uses: test-org-fanna/.github/.github/workflows/quality-control-sonar.yml@main
     # with:
-      # working_directory: # Optional, defaults to './'. The last slash needs to be included
+      # working_directory: # Optional, defaults to './'
       # coverage_report_name: # Optional, defaults to 'coverage.xml'
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
