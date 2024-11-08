@@ -22,6 +22,7 @@ jobs:
     needs: tag
     with:
       tag: ${{ needs.tag.outputs.tag }}
+      # working_directory: # Optional, defaults to './'.
 
   # Repeat steps docker + deploy-verify if there are multiple Dockerfiles
 

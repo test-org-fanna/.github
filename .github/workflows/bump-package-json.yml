@@ -7,6 +7,11 @@ on:
         required: true
         type: string
         description: "The Semantic Versioning GitHub tag used for version control"
+      working_directory:
+        required: false
+        type: string
+        description: Whenever the app (i.e. package.json) is not in the root; the location can be specified here
+        default: ./
 
 jobs:
   update-package-json:
@@ -23,4 +28,5 @@ jobs:
           node-version: '20'
 
       - name: Bump package.json version with tag
+        working-directory: ${{ inputs.working_directory }}
         run: yarn version --no-git-tag-version --new-version ${{ inputs.tag }}
