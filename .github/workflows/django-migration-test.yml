@@ -14,6 +14,7 @@ on:
         type: string
         required: true
       file_paths_to_cache:
+        type: string
         required: true
       # Giving from caller workflow matrix
       python_version:
