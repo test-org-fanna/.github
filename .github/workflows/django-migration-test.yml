@@ -70,7 +70,7 @@ jobs:
           python-version: ${{ inputs.python_version }}
 
       - name: Cache and Poetry
-        uses: test-org-fanna/.github/.github/composite-actions/action.yml@main
+        uses: test-org-fanna/.github@main
         with:
           python_version: ${{ inputs.python_version }}
           poetry_version: ${{ inputs.poetry_version }}
