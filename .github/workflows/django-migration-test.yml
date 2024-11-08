@@ -64,12 +64,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup python ${{ inputs.python_version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ inputs.python_version }}
-
-      - name: Cache and Poetry
+      - name: Python, Cache and Poetry
         uses: test-org-fanna/.github@main
         with:
           python_version: ${{ inputs.python_version }}
