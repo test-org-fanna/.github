@@ -47,6 +47,7 @@ runs:
 
     - name: Configure Poetry and install packages
       working-directory: ${{ inputs.working_directory }}
+      shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         poetry config repositories.repowered ${{ inputs.private_pypi_url}}
