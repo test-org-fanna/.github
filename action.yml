@@ -56,7 +56,7 @@ runs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         echo "Verify input url"
-        echo ${{ inputs.private_pypi_url}}
-        poetry config repositories.repowered ${{ inputs.private_pypi_url}}
-        poetry config http-basic.repowered ${{ inputs.private_pypi_user }} ${{ inputs.private_pypi_password}}
+        echo "${{ inputs.private_pypi_url}}"
+        poetry config repositories.repowered "${{ inputs.private_pypi_url}}"
+        poetry config http-basic.repowered "${{ inputs.private_pypi_user }}" "${{ inputs.private_pypi_password}}"
         poetry install --no-interaction --no-root --no-ansi
