@@ -2,14 +2,12 @@ name: Poetry Setup including Cache with configurable files
 description: This composite action loads the cache that can be configured for multiple files, installs poetry with configurations and it's packages if not found on the cache.
 
 inputs:
-  # Required
-  files_to_cache:
-    required: true
+  file_paths_to_cache:
+    required: false
     description: The poetry installation is in '/home/runner/.local/' and the '.venv' is for the poetry packages
     default: |
       .venv
       /home/runner/.local/
-  # Optional
   python_version:
     required: false
     default: 3.11.2
@@ -28,7 +26,7 @@ runs:
       id: cache
       uses: actions/cache@v4
       with:
-        path: ${{ inputs.files_to_cache }}
+        path: ${{ inputs.file_paths_to_cache }}
         key: cache-python-${{ inputs.python_version }}-poetry-${{ inputs.poetry_version }}-${{ hashFiles('**/poetry.lock') }}
 
     - name: Install Poetry ${{ inputs.poetry_version }}
