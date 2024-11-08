@@ -18,6 +18,13 @@ inputs:
     required: false
     description: Whenever the django app (i.e. manage.py) is not in the root; the location can be specified here. The last slash needs to be included
     default: ./
+  private_pypi_url:
+    required: true
+  private_pypi_user:
+    required: true
+  private_pypi_password:
+    required: true
+
 
 runs:
   using: "composite"
@@ -42,6 +49,6 @@ runs:
       working-directory: ${{ inputs.working_directory }}
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        poetry config repositories.repowered ${{ secrets.private_pypi_url}}
-        poetry config http-basic.repowered ${{ secrets.private_pypi_user }} ${{ secrets.private_pypi_password}}
+        poetry config repositories.repowered ${{ inputs.private_pypi_url}}
+        poetry config http-basic.repowered ${{ inputs.private_pypi_user }} ${{ inputs.private_pypi_password}}
         poetry install --no-interaction --no-root --no-ansi
