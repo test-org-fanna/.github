@@ -14,11 +14,10 @@ jobs:
       contents: write
     uses: test-org-fanna/.github/.github/workflows/generate-github-tag.yml@main
 
+  # Only for the front-end; delete this job if you don't have a 'package.json'
   bump:
     permissions:
       contents: write
-    # If the package.json is in a different folder than the root, make sure to update it here
-    if: ${{ hashFiles('package.json') != '' }}
     uses: test-org-fanna/.github/.github/workflows/bump-package-json.yml@main
     needs: tag
     with:
