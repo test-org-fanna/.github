@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
@@ -26,6 +28,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "CI"
+          git config --global user.email "no-reply@repowered.nl"
 
       - name: Bump package.json version with tag
         working-directory: ${{ inputs.working_directory }}
