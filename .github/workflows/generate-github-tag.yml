@@ -26,8 +26,6 @@ jobs:
         id: github-tag
         uses: anothrNick/github-tag-action@1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          RELEASE_BRANCHES: main, dev
           DEFAULT_BUMP: none
-          PRERELEASE: true
+          PRERELEASE: ${{ github.event_name == 'pull_request' }}
