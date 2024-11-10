@@ -59,6 +59,7 @@ jobs:
           DOCKERFILE=${{ inputs.dockerfile_name }}
           DOCKERFILE_NAME=$(echo $DOCKERFILE | sed 's/Dockerfile./-/;s/Dockerfile//')
           echo "image_tag=${{ env.hub_repo }}${DOCKERFILE_NAME}:${{ inputs.tag }}" >> $GITHUB_OUTPUT
+          echo "The Docker image tag is: ${{ env.hub_repo }}${DOCKERFILE_NAME}:${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
 
   build-and-push:
     runs-on: ubuntu-latest
