@@ -46,11 +46,11 @@ jobs:
           cache-dependency-path: ${{ inputs.working_directory }}/yarn.lock
 
       - name: Install dependencies
-        working_directory: ${{ inputs.working_directory }}
+        working-directory: ${{ inputs.working_directory }}
         run: yarn install --immutable
 
       - name: Check for outdated dependencies
-        working_directory: ${{ inputs.working_directory }}
+        working-directory: ${{ inputs.working_directory }}
         continue-on-error: true
         run: |
           OUTDATED_CHECK=$(yarn run ncu)
@@ -67,15 +67,15 @@ jobs:
           fi
 
       - name: Yarn lint
-        working_directory: ${{ inputs.working_directory }}
+        working-directory: ${{ inputs.working_directory }}
         run: yarn lint
 
       - name: Yarn prettier check
-        working_directory: ${{ inputs.working_directory }}
+        working-directory: ${{ inputs.working_directory }}
         run: yarn prettier --check ${{ inputs.prettier_check_content }}
 
       - name: Yarn tests with markdown and coverage
-        working_directory: ${{ inputs.working_directory }}
+        working-directory: ${{ inputs.working_directory }}
         if: ${{ inputs.should_test }}
         run: yarn test:coverage
 
