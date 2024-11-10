@@ -81,7 +81,7 @@ jobs:
 
       - name: Show test failures in the job summary
         working-directory: ${{ inputs.working_directory }}
-        if: ${{ inputs.should_test == 'true' }} && failure()
+        if: failure()
         # Clean up the test report with 'sed' since we're only interested in the summary and failures
         run: |
           sed -n '/## ✅/q;p' test_report.md > report_summary.md && \
