@@ -29,3 +29,4 @@ jobs:
           WITH_V: true
           RELEASE_BRANCHES: main, dev
           DEFAULT_BUMP: none
+          PRERELEASE: ${{ github.event_name == 'pull_request' }}
