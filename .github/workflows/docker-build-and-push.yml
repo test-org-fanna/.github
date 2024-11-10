@@ -81,7 +81,7 @@ jobs:
             ARG_3=${{ inputs.build_argument_three }}
           context: "{{defaultContext}}:./"
           file: ${{ inputs.dockerfile_name }}
-          push: false
+          push: true
           tags: ${{ needs.generate-image-tag.outputs.image_tag }}
           secrets: |
               first=${{ secrets.docker_secret_1 }}
