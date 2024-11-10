@@ -10,8 +10,6 @@ on:
 jobs:
   generate-tag:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     outputs:
       tag: ${{ steps.github-tag.outputs.tag }}
     steps:
