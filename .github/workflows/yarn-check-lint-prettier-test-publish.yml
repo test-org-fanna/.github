@@ -3,15 +3,14 @@ name: Yarn install, eslint, prettier and optionally publish and/or test with cov
 on:
   workflow_call:
     inputs:
-      inputs:
-        should_publish:
-          required: true
-          type: boolean
-          description: Whether or not yarn should build and publish the package
-        should_test:
-          required: true
-          type: boolean
-          description: Whether or not yarn should run tests with coverage
+      should_publish:
+        required: true
+        type: boolean
+        description: Whether or not yarn should build and publish the package
+      should_test:
+        required: true
+        type: boolean
+        description: Whether or not yarn should run tests with coverage
       prettier_check_content:
         required: false
         type: string
@@ -94,12 +93,12 @@ jobs:
         working-directory: vue-test
         # Clean up the test report with 'sed' since we're only interested in the summary without links to the original file
         run: |
-            sed -n '/<table class="coverage-summary">/,/<\/table>/p' coverage/index.html >> test.html
-            sed -i 's|<a href="[^"]*">\(.*\)</a>|<p>\1</p>|g' test.html
-            echo "<h1>Coverage report</h1>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            cat test.html >> $GITHUB_STEP_SUMMARY
+          sed -n '/<table class="coverage-summary">/,/<\/table>/p' coverage/index.html >> test.html
+          sed -i 's|<a href="[^"]*">\(.*\)</a>|<p>\1</p>|g' test.html
+          echo "<h1>Coverage report</h1>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat test.html >> $GITHUB_STEP_SUMMARY
 
       - name: Archive 'coverage.xml' report
         uses: actions/upload-artifact@v4
