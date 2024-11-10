@@ -22,6 +22,7 @@ jobs:
     needs: tag
     with:
       tag: ${{ needs.tag.outputs.tag }}
+      # node_version: # Optional, defaults to "20"
       # working_directory: # Optional, defaults to './'.
 
   # Repeat steps below if there are multiple Dockerfiles and/or docker-compose files
