@@ -109,5 +109,5 @@ jobs:
 
       - name: Yarn build and publish
         working-directory: ${{ inputs.working_directory }}
-        if: $${ inputs.should_publish }}
+        if: ${{ inputs.should_publish }}
         run: yarn build && yarn npm publish
