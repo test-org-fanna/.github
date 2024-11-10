@@ -45,12 +45,14 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.docker-image-tag.outputs.image_tag }}
+      latest_tag: ${{ steps.docker-image-tag.outputs.latest_tag }}
     steps:
       # Sets the docker image tag according to the file system structure of Dockerhub with versioning
       # Examples:
       # - standard Dockerfile: thehubusername/repositoryfoobar:v1.0.1.beta.3
       # - with name (i.e. Dockerfile.foobar): thehubusername/repositoryfoobar-helloworld:v1.0.1.beta.3
       # - Repowered example: repowered/platform-django:v1.0.1.beta.3
+      # - Repowered example: repowered/platform-django:v1.0.1,latest
       - name: Set docker image tag for '${{ inputs.dockerfile_name }}'
         id: docker-image-tag
         env:
@@ -59,7 +61,11 @@ jobs:
           DOCKERFILE=${{ inputs.dockerfile_name }}
           DOCKERFILE_NAME=$(echo $DOCKERFILE | sed 's/Dockerfile./-/;s/Dockerfile//')
           echo "image_tag=${{ env.hub_repo }}${DOCKERFILE_NAME}:${{ inputs.tag }}" >> $GITHUB_OUTPUT
-          echo "The Docker image tag is: ${{ env.hub_repo }}${DOCKERFILE_NAME}:${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          if [ ${{ github.ref == 'refs/heads/main' }} ]; then
+            echo "image_tag=${{ env.hub_repo }}${DOCKERFILE_NAME}:${{ inputs.tag }},latest" >> $GITHUB_OUTPUT
+          else
+            echo "image_tag=${{ env.hub_repo }}${DOCKERFILE_NAME}:${{ inputs.tag }}" >> $GITHUB_OUTPUT
+          fi
 
   build-and-push:
     runs-on: ubuntu-latest
