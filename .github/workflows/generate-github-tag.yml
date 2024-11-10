@@ -26,9 +26,6 @@ jobs:
         id: github-tag
         uses: anothrNick/github-tag-action@1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
           WITH_V: true
           RELEASE_BRANCHES: main, dev
-          DEFAULT_BRANCH: dev
           DEFAULT_BUMP: none
-          PRERELEASE: true
