@@ -1,21 +1,25 @@
 name: GitHub Tag, Docker publish build, SSH Deploy
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
       - dev
-      - qa #TODO(REP-2853): temporarily until the rollback workflow is in place
+  pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
   tag:
+    if: ${{ contains(github.event.head_commit.message, '[merge]') || contains(github.event.pull_request.title, '[deploy]') }}
     permissions:
       contents: write
     uses: test-org-fanna/.github/.github/workflows/generate-github-tag.yml@main
 
   # Only for the front-end; delete this job if you don't have a 'package.json'
   bump:
+    if: ${{ contains(github.event.head_commit.message, '[merge]') || contains(github.event.pull_request.title, '[deploy]') }}
     permissions:
       contents: write
     uses: test-org-fanna/.github/.github/workflows/bump-package-json.yml@main
@@ -28,6 +32,7 @@ jobs:
   # Repeat steps docker + deploy-verify if there are multiple Dockerfiles
 
   docker:
+    if: ${{ contains(github.event.head_commit.message, '[merge]') || contains(github.event.pull_request.title, '[deploy]') }}
     uses: test-org-fanna/.github/.github/workflows/docker-build-and-push.yml@main
     needs: tag
     with:
@@ -48,6 +53,7 @@ jobs:
       # docker_secret_6:
 
   github-environment:
+    if: ${{ contains(github.event.head_commit.message, '[merge]') || contains(github.event.pull_request.title, '[deploy]') }}
     uses: test-org-fanna/.github/.github/workflows/determine-environment.yml@main
 
 # TODO(REP-2945): Move this step to the repository infra
@@ -59,6 +65,7 @@ jobs:
 #      tag: ${{ needs.tag.outputs.tag }}
 
   deploy-verify:
+    if: ${{ contains(github.event.head_commit.message, '[merge]') || contains(github.event.pull_request.title, '[deploy]') }}
     uses: test-org-fanna/.github/.github/workflows/kube-deploy-verify.yml@main
     needs: [github-environment, docker]
     with:
