@@ -1,14 +1,13 @@
 name: GitHub Tag, Docker publish build, SSH Deploy
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - dev
-      - release/**
-      - hotfix/**
+    - main
+    - dev
   pull_request:
-
+    branches:
+      - main
+      - dev
 jobs:
   tag:
     if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[deploy]') }}
