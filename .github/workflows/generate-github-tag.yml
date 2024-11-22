@@ -27,4 +27,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           RELEASE_BRANCHES: main, dev
-          PRERELEASE: ${{ github.event_name == 'pull_request' }}
+          PRERELEASE: |
+            (( github.event_name == 'pull_request' ) && 
+            (!contains(github.ref, 'main') || !contains(github.ref, 'dev'))
