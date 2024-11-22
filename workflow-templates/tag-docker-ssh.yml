@@ -63,6 +63,7 @@ jobs:
     with:
       environment: ${{ needs.environment.outputs.environment }}
       tag: ${{ needs.tag.outputs.tag }}
+      # should_scp: # Optional, defaults to true
       # server_username: # Optional, defaults to 'root'
       # docker-compose_remote_dir: # Optional, defaults to '/root'
       # docker-compose_file_path: # Optional, defaults to 'docker-compose.yml'
