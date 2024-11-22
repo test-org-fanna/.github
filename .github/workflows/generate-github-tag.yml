@@ -28,7 +28,7 @@ jobs:
             (github.event_name == 'workflow_run' && contains(github.event.workflow_run.head_commit.message, '[deploy]')))
         run:
           echo "is_pre-release=$IS_PRE-RELEASE >> $GITHUB_OUTPUT
-          echo "Is prereleasde -> $IS_PRE-RELEASE >> $GITHUB_JOB_SUMMARY
+          echo "Is prereleasde -> $IS_PRE-RELEASE >> $GITHUB_STEP_SUMMARY
 
       # Automatically bump and tag with the latest SemVer formatted version.
       - name: Generate and push GitHub tag
