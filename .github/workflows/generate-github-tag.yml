@@ -12,17 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.github-tag.outputs.tag }}
-    env:
-      IS_PRE-RELEASE: >
-        ((github.event_name == 'push') ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') ||
-        (github.event_name == 'workflow_run' && contains(github.event.workflow_run.head_commit.message, '[deploy]')))
     steps:
       # Checkout the repository with all commit history
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
         with:
           fetch-depth: '0'
+
+      - name: Determine if pre-release
+        id: is_pre-release
+        env:
+          IS_PRE-RELEASE: >
+            ((github.event_name == 'push') ||
+            (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') ||
+            (github.event_name == 'workflow_run' && contains(github.event.workflow_run.head_commit.message, '[deploy]')))
+        run:
+          echo "is_pre-release=$IS_PRE-RELEASE >> $GITHUB_OUTPUT
+          echo "Is prereleasde -> $IS_PRE-RELEASE >> $GITHUB_JOB_SUMMARY
 
       # Automatically bump and tag with the latest SemVer formatted version.
       - name: Generate and push GitHub tag
@@ -32,4 +38,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           RELEASE_BRANCHES: main, d-v
-          PRERELEASE: ${{ env.IS_PRE-RELEASE }}
+          PRERELEASE: ${{ steps.is_pre-release.outputs.is_pre-release }}
