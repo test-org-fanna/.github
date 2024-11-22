@@ -32,4 +32,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           RELEASE_BRANCHES: main, d-v
-          PRERELEASE: ${{ env.IS_PRE_RELEASE }}
+          PRERELEASE: ${{ env.IS_PRE-RELEASE }}
