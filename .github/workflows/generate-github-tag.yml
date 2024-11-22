@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.github-tag.outputs.tag }}
+    env:
+      IS_PRE-RELEASE: >
+        ((github.event_name == 'push') ||
+        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') ||
+        (github.event_name == 'workflow_run' && contains(github.event.workflow_run.head_commit.message, '[deploy]')))
     steps:
       # Checkout the repository with all commit history
       - name: Checkout ${{ github.repository }}
@@ -26,8 +31,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          RELEASE_BRANCHES: main, dev
-          PRERELEASE: >
-              ((github.event_name == 'push') ||
-              (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') ||
-              (github.event_name == 'workflow_run' && contains(github.event.workflow_run.head_commit.message, '[deploy]')))
+          RELEASE_BRANCHES: main, d-v
+          PRERELEASE: ${{ env.IS_PRE_RELEASE }}
