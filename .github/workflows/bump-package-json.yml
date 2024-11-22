@@ -38,4 +38,6 @@ jobs:
 
       - name: Bump package.json version with tag
         working-directory: ${{ inputs.working_directory }}
-        run: yarn version --no-git-tag-version --new-version ${{ inputs.tag }}
+        # (22-11-2024) Do not use the yarn version commands here
+        # https://github.com/yarnpkg/berry/issues/4424
+        run: npm version ${{ inputs.tag }} --no-git-tag-version
