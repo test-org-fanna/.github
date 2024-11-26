@@ -36,9 +36,11 @@ on:
       docker_hub_access_token:
         required: true
       docker_secret_1:
-      docker_secret_2: #TODO: multiple secrets: hier een oplossing voor bedenken
+      docker_secret_2:
       docker_secret_3:
-
+      docker_secret_4:
+      docker_secret_5:
+      docker_secret_6:
 
 jobs:
   generate-image-tag:
@@ -51,16 +53,11 @@ jobs:
       # - standard Dockerfile: thehubusername/repositoryfoobar:v1.0.1.beta.3
       # - with name (i.e. Dockerfile.foobar): thehubusername/repositoryfoobar-helloworld:v1.0.1.beta.3
       # - Repowered example: repowered/platform-django:v1.0.1.beta.3
-      # - Repowered example: repowered/platform-django:v1.0.1,latest
       - name: Set docker image tag for '${{ inputs.dockerfile_name }}'
         id: docker-image-tag
         env:
           hub_repo: ${{ inputs.docker_hub_username }}/${{ github.event.repository.name }}
         run: |
-          echo "Info: "
-          echo "Info: head ref = ${{ github.head_ref }} "
-          echo "Info: ref = ${{ github.ref }} "
-          echo "Info: event name = ${{  github.event_name }} "
           DOCKERFILE=${{ inputs.dockerfile_name }}
           DOCKERFILE_NAME=$(echo $DOCKERFILE | sed 's/Dockerfile./-/;s/Dockerfile//')
           if [ ${{ contains(github.ref,'main') }} == true ]; then
@@ -81,18 +78,21 @@ jobs:
           password: ${{ secrets.docker_hub_access_token }}
 
       # Build the Dockerfile(s) with the image tag in the correct format and push to the hub
-      - name: Build ${{ inputs.dockerfile_name }} and push with tag
+      - name: Build '${{ inputs.dockerfile_name }}' and push with tag '${{ inputs.tag }}'
         uses: docker/build-push-action@v6
         with:
-          build-args: |
-            ARG_1=${{ inputs.build_argument_one }}
-            ARG_2=${{ inputs.build_argument_two }}
-            ARG_3=${{ inputs.build_argument_three }}
           context: "{{defaultContext}}:./"
           file: ${{ inputs.dockerfile_name }}
           push: true
           tags: ${{ needs.generate-image-tag.outputs.image_tag }}
+          build-args: |
+            ARG_1=${{ inputs.build_argument_one }}
+            ARG_2=${{ inputs.build_argument_two }}
+            ARG_3=${{ inputs.build_argument_three }}
           secrets: |
               first=${{ secrets.docker_secret_1 }}
               second=${{ secrets.docker_secret_2 }}
               third=${{ secrets.docker_secret_3 }}
+              fourth=${{ secrets.docker_secret_4 }}
+              fifth=${{ secrets.docker_secret_5 }}
+              sixth=${{ secrets.docker_secret_6 }}

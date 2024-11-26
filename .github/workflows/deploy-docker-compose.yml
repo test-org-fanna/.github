@@ -29,6 +29,8 @@ on:
         required: false
         default: docker-compose-postgres.yaml
 
+run-name: Deploy branch ${{ github.event.workflow_run.head_branch }} with tag ${{ inputs.tag }} to ${{ inputs.environment }} by @${{ github.actor }}
+
 jobs:
   scp-docker-compose:
     name: Secure copy docker-compose to server

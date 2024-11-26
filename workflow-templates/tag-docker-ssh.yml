@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - dev
-  pull_request:
-    branches:
-      - main
-      - dev
+  workflow_run:
+    workflows:
+      - Test
+    types:
+      - completed
 
 jobs:
   tag:
@@ -27,16 +27,20 @@ jobs:
       # node_version: # Optional, defaults to "20"
       # working_directory: # Optional, defaults to './'.
 
+  environment:
+    uses: test-org-fanna/.github/.github/workflows/determine-environment.yml@main
+
   # Repeat steps below if there are multiple Dockerfiles and/or docker-compose files
 
   docker:
     uses: test-org-fanna/.github/.github/workflows/docker-build-and-push.yml@main
-    needs: tag
+    needs: [tag, environment]
+    environment: ${{ needs.environment.outputs.environment {}}
     with:
       tag: ${{ needs.tag.outputs.tag }}
       docker_hub_username: ${{ vars.DOCKER_HUB_USERNAME }}
       # dockerfile_name: # Optional, defaults to 'Dockerfile'
-      # build_argument_one: # Optional, no default; from GitHub Variables
+      build_argument_one: ${{ vars.DEV_NUMBER }}
       # build_argument_two: # Optional, no default; from GitHub Variables
       # build_argument_three: # Optional, no default; from GitHub Variables
     secrets:
@@ -49,8 +53,6 @@ jobs:
       # docker_secret_5:
       # docker_secret_6:
 
-  environment:
-    uses: test-org-fanna/.github/.github/workflows/determine-environment.yml@main
 
   deploy:
     needs: [ environment, docker, tag ]
