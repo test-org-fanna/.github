@@ -42,6 +42,8 @@ on:
       docker_secret_5:
       docker_secret_6:
 
+run-name: Build docker with tag ${{ inputs.tag }}
+
 jobs:
   generate-image-tag:
     runs-on: ubuntu-latest
