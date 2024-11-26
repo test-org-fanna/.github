@@ -27,7 +27,7 @@ on:
       docker-compose_file_path:
         type: string
         required: false
-        default: docker-compose-postgres.yaml
+        default: docker-compose.yaml
 
 run-name: Deploy branch ${{ github.event.workflow_run.head_branch }} with tag ${{ inputs.tag }} to ${{ inputs.environment }} by @${{ github.actor }}
 
