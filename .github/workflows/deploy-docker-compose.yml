@@ -76,7 +76,7 @@ jobs:
       - name: Summary
         if: always()
         run: |
-          if [ ${{ contains(steps.ssh-deploy.conclusion , 'success') }} ]]; then
+          if ${{ contains(steps.ssh-deploy.conclusion , 'success') }}; then
             echo ":check: Successfully deployed branch ${{ github.event.workflow_run.head_branch }} with tag ${{ inputs.tag }} to ${{ inputs.environment }} by @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           else
             echo ":x: Failure during the deployment of branch ${{ github.event.workflow_run.head_branch }} with tag ${{ inputs.tag }} to ${{ inputs.environment }} by @${{ github.actor }}

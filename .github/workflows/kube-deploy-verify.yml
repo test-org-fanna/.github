@@ -47,4 +47,13 @@ jobs:
         run: kubectl set image deployment/${{matrix.container_name}}-deployment ${{matrix.container_name}}=${{inputs.docker_image_tag}}
 
       - name: Verify ${{matrix.container_name}} deployment
+        id: kube-deploy
         run: kubectl rollout status deployment/${{matrix.container_name}}-deployment
+
+      - name: Summary
+        if: always()
+        run: |
+          if ${{ contains(steps.kube-deploy.conclusion , 'success') }}; then
+            echo ":check: Successfully deployed ${{matrix.container_name}} from branch ${{ github.event.workflow_run.head_branch }} with image tag ${{ inputs.docker_image_tag }} to ${{ inputs.environment }} by @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo ":x: Failure during the deployment of ${{matrix.container_name}} from branch ${{ github.event.workflow_run.head_branch }} with image tag ${{ inputs.docker_image_tag }} to ${{ inputs.environment }} by @${{ github.actor }}
