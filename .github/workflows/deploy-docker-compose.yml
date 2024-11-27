@@ -29,8 +29,6 @@ on:
         required: false
         default: docker-compose.yml
 
-run-name: Deploy branch ${{ github.event.workflow_run.head_branch }} with tag ${{ inputs.tag }} to ${{ inputs.environment }} by @${{ github.actor }}
-
 jobs:
   scp-docker-compose:
     name: Secure copy docker-compose to server
@@ -56,6 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: SSH deployment with docker-compose
+        id: ssh-deploy
         uses: appleboy/ssh-action@v1.0.3
         env:
           TAG: ${{ inputs.tag }}
@@ -74,3 +73,10 @@ jobs:
             docker-compose -f $DOCKER_COMPOSE_PATH pull 
             docker-compose -f $DOCKER_COMPOSE_PATH up -d --force-recreate
 
+      - name: Summary
+        if: always()
+        run: |
+          if [ ${{ contains(steps.ssh-deploy.conclusion , 'success') }} ]]; then
+            echo ":check: Successfully deployed branch ${{ github.event.workflow_run.head_branch }} with tag ${{ inputs.tag }} to ${{ inputs.environment }} by @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo ":x: Failure during the deployment of branch ${{ github.event.workflow_run.head_branch }} with tag ${{ inputs.tag }} to ${{ inputs.environment }} by @${{ github.actor }}
