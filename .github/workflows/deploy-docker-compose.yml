@@ -78,8 +78,6 @@ jobs:
     needs: [ deploy-docker-compose ]
     if: always()
     runs-on: ubuntu-latest
-    env:
-      BRANCH: ${{ github.event.workflow_run.head_branch || "main" }}
     steps:
     - name: Summary
       run: |
@@ -88,7 +86,9 @@ jobs:
         else
           echo "<h2>:x: Deployment failed </h2>" >> $GITHUB_STEP_SUMMARY
         fi
-        echo "Branch: $BRANCH" >> $GITHUB_STEP_SUMMARY
+        echo "Branch: ${{env.BRANCH}}" >> $GITHUB_STEP_SUMMARY
         echo "Tag: ${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
         echo "Environment: ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
         echo "By: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+      env:
+        BRANCH: ${{ github.event.workflow_run.head_branch || "main" }}
