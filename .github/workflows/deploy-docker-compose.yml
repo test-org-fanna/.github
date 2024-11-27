@@ -81,14 +81,14 @@ jobs:
     steps:
     - name: Summary
       run: |
-        if ${{ contains(needs.deploy-docker-compose.result, 'success') }}; then
+        if [[ "${{ needs.deploy-docker-compose.outcome }}" == "success" ]]; then
           echo "<h2>:check: Deployment successful </h2>" >> $GITHUB_STEP_SUMMARY
         else
           echo "<h2>:x: Deployment failed </h2>" >> $GITHUB_STEP_SUMMARY
         fi
-        echo "Branch: ${{env.BRANCH}}" >> $GITHUB_STEP_SUMMARY
+        echo "Branch: $BRANCH" >> $GITHUB_STEP_SUMMARY
         echo "Tag: ${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
         echo "Environment: ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
         echo "By: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
       env:
-        BRANCH: ${{ github.event.workflow_run.head_branch || "main" }}
+        BRANCH: ${{ github.event.workflow_run.head_branch || github.ref_name }}
