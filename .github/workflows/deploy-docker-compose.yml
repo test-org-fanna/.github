@@ -82,15 +82,15 @@ jobs:
     - name: Summary
       run: |
         if ${{ contains(needs.deploy-docker-compose.result, 'success') }}; then
-          echo "<h2>:check: Deployment successful </h2>" >> $GITHUB_STEP_SUMMARY
+          echo "<h2>:white_check_mark: Deployment successful </h2>" >> $GITHUB_STEP_SUMMARY
         else
           echo "<h2>:x: Deployment failed </h2>" >> $GITHUB_STEP_SUMMARY
         fi
         {
           echo ""
           echo "Branch: $BRANCH"
-          echo "Tag: $TAG"
-          echo "Environment: $ENVIRONMENT"
+          echo "Tag: ${{ inputs.tag }}"
+          echo "Environment: ${{ inputs.environment }}"
           echo "By: ${{ github.actor }}"
         } >> $GITHUB_STEP_SUMMARY
       env:
