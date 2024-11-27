@@ -14,8 +14,6 @@ on:
         type: string
         required: true
 
-run-name: Deploy branch ${{ github.event.workflow_run.head_branch }} with image tag ${{ inputs.docker_image_tag }} to ${{ inputs.environment }} by @${{ github.actor }}
-
 jobs:
   deploy-verify:
     runs-on: ubuntu-latest
@@ -50,10 +48,22 @@ jobs:
         id: kube-deploy
         run: kubectl rollout status deployment/${{matrix.container_name}}-deployment
 
+  deploy-summary:
+    name: Deployment summary
+    needs: [ deploy-verify ]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
       - name: Summary
-        if: always()
         run: |
-          if ${{ contains(steps.kube-deploy.conclusion , 'success') }}; then
-            echo ":check: Successfully deployed ${{matrix.container_name}} from branch ${{ github.event.workflow_run.head_branch }} with image tag ${{ inputs.docker_image_tag }} to ${{ inputs.environment }} by @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ needs.deploy-verify.outcome }}" == "success" ]]; then
+            echo "<h2>:check: Deployment successful </h2>" >> $GITHUB_STEP_SUMMARY
           else
-            echo ":x: Failure during the deployment of ${{matrix.container_name}} from branch ${{ github.event.workflow_run.head_branch }} with image tag ${{ inputs.docker_image_tag }} to ${{ inputs.environment }} by @${{ github.actor }}
+            echo "<h2>:x: Deployment failed </h2>" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "Branch: $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "Image tag: ${{ inputs.docker_image_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "Environment: ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "By: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        env:
+          BRANCH: ${{ github.event.workflow_run.head_branch || github.ref_name }}

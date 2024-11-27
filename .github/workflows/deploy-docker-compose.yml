@@ -74,7 +74,7 @@ jobs:
             docker-compose -f $DOCKER_COMPOSE_PATH up -d --force-recreate
 
   deploy-summary:
-    name: Deployment summary
+    name: Deployment outcome
     needs: [ deploy-docker-compose ]
     if: always()
     runs-on: ubuntu-latest
